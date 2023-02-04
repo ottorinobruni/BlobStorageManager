@@ -6,9 +6,6 @@ env:
   DOTNET_VERSION: '7.x'     
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:

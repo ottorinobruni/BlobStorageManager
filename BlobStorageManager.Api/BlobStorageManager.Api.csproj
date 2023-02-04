@@ -24,7 +24,6 @@
     <None Remove="Azure.Storage.Blobs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>

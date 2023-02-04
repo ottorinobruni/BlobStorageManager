@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1704.4
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobStorageManager.Api", "BlobStorageManager.Api\BlobStorageManager.Api.csproj", "{F7A4F279-8C0F-491D-BDA1-4C4A65558C30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlobStorageManager.Api", "BlobStorageManager.Api\BlobStorageManager.Api.csproj", "{F7A4F279-8C0F-491D-BDA1-4C4A65558C30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobStorageManager.Models", "BlobStorageManager.Models\BlobStorageManager.Models.csproj", "{395E98DB-8812-496A-B2B8-F29B5C0F4C7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlobStorageManager.Models", "BlobStorageManager.Models\BlobStorageManager.Models.csproj", "{395E98DB-8812-496A-B2B8-F29B5C0F4C7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobStorageManager.Web", "BlobStorageManager.Web\BlobStorageManager.Web.csproj", "{0A7CF226-AC5A-456C-B239-8CE04C7815A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{395E98DB-8812-496A-B2B8-F29B5C0F4C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{395E98DB-8812-496A-B2B8-F29B5C0F4C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{395E98DB-8812-496A-B2B8-F29B5C0F4C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A7CF226-AC5A-456C-B239-8CE04C7815A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A7CF226-AC5A-456C-B239-8CE04C7815A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A7CF226-AC5A-456C-B239-8CE04C7815A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A7CF226-AC5A-456C-B239-8CE04C7815A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

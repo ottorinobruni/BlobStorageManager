@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BlobStorageManager.Api.Models;
 using BlobStorageManager.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<BlobStorageManager.Models.AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration["PsqlFilesConnectionString"]));
 
 builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+builder.Services.AddScoped<IFileStorageRepository, FileStorageRepository>();
 
 var app = builder.Build();
 

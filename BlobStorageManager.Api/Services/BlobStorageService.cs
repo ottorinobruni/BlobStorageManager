@@ -2,7 +2,9 @@
 using System.Reflection.Metadata;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using BlobStorageManager.Api.Models;
 using BlobStorageManager.Models;
+using BlobStorageManager.Models.Entity;
 
 namespace BlobStorageManager.Api.Services
 {
@@ -10,12 +12,14 @@ namespace BlobStorageManager.Api.Services
     {
         private readonly string? storageConnectionString;
         private readonly string? storageContainerName;
+        private readonly IFileStorageRepository fileStorageRepository;
         private readonly ILogger<BlobStorageService> logger;
 
-        public BlobStorageService(IConfiguration configuration, ILogger<BlobStorageService> logger)
+        public BlobStorageService(IConfiguration configuration, ILogger<BlobStorageService> logger, IFileStorageRepository fileStorageRepository)
         {
             this.storageConnectionString = configuration.GetValue<string>("BlobStorageConnectionString");
             this.storageContainerName = configuration.GetValue<string>("BlobContainerName");
+            this.fileStorageRepository = fileStorageRepository;
             this.logger = logger;
         }
 
@@ -33,15 +37,28 @@ namespace BlobStorageManager.Api.Services
                 await containerClient.CreateIfNotExistsAsync();
                 var blobClient = containerClient.GetBlobClient(file.FileName);
 
-                await blobClient.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+                blobClient.DeleteIfExists(DeleteSnapshotsOption.IncludeSnapshots);
 
                 await using (Stream? data = file.OpenReadStream())
                 {
                     await blobClient.UploadAsync(data);
                 }
 
-                response.Status = $"File {file.FileName} Uploaded!";
-                response.Error = false;
+                var fileStorage = new FileStorage()
+                {
+                    FileName = file.FileName,
+                    ContentType = file.ContentType,
+                    CreatedOn = DateTime.UtcNow,
+                    UploadDateTime = DateTime.UtcNow,
+                    Uri = blobClient.Uri.AbsoluteUri
+                };
+
+                var result = await fileStorageRepository!.AddFile(fileStorage);
+                if (result)
+                {
+                    response.Status = $"File {file.FileName} Uploaded!";
+                    response.Error = false;
+                }
             }
             catch (Exception ex)
             {
@@ -78,6 +95,7 @@ namespace BlobStorageManager.Api.Services
             }
             return null;
         }
+
     }
 }
 

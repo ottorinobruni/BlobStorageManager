@@ -1,8 +1,8 @@
 ﻿using System;
 namespace BlobStorageManager.Models
 {
-	public class ResponseDto
-	{
+    public class ResponseDto
+    {
         public string Status { get; set; }
 
         public bool Error { get; set; }
@@ -13,4 +13,3 @@ namespace BlobStorageManager.Models
         }
     }
 }
-

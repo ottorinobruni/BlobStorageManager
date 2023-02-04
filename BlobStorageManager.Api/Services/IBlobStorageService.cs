@@ -1,4 +1,6 @@
 ﻿using System;
+using BlobStorageManager.Models;
+
 namespace BlobStorageManager.Api.Services
 {
     public interface IBlobStorageService

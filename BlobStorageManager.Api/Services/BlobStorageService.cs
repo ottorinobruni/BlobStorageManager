@@ -6,7 +6,7 @@ using BlobStorageManager.Models;
 
 namespace BlobStorageManager.Api.Services
 {
-    public class BlobStorageService
+    public class BlobStorageService : IBlobStorageService
     {
         private readonly string? storageConnectionString;
         private readonly string? storageContainerName;

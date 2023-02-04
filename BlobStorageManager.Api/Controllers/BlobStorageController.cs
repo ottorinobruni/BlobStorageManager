@@ -32,7 +32,7 @@ namespace BlobStorageManager.Api.Controllers
         }
 
         [HttpGet]
-        [Route("donwload/{fileName}")]
+        [Route("download/{fileName}")]
         public async Task<IActionResult> Download(string fileName)
         {
             StorageDto? file = await blobService.DownloadFileAsync(fileName);

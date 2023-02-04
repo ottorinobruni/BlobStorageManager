@@ -1,7 +1,114 @@
 ﻿@page "/blobstoragelist"
+@inject HttpClient Http
+@inject IConfiguration Configuration
+@using System.Linq
+@using System.Net.Http.Headers
 
-<h3>BlobStorageList</h3>
+<PageTitle>Blob Storage</PageTitle>
+
+<h1>Blob Storage</h1>
+
+@if (files == null)
+{
+        <p><em>Loading...</em></p>
+}
+else
+{
+        <p>
+            <form @onsubmit="OnSubmit">
+                <label>
+                    Upload file: <InputFile OnChange="@OnInputFileChange" />
+                </label>
+                <button class="btn btn-primary" type="submit">Upload</button>
+            </form>
+        </p>
+        <p><label>@Message</label></p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ContentType</th>
+                    <th>Uri</th>
+                    <th>Upload Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var file in files)
+            {
+                        <tr>
+                            <td>@file.FileName</td>
+                            <td>@file.ContentType</td>
+                            <td>@file.Uri</td>
+                            <td>@file.UploadDateTime.ToString()</td>
+                            <td>
+                                <a class="btn btn-secondary btn-sm" href="@GetUrl(file)" target="_blank">Download</a>
+                             </td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+}
 
 @code {
+    private FileStorage[]? files;
+    List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+    string Message = "No file(s) selected";
 
+    protected override async Task OnInitializedAsync()
+    {
+        files = await FetchFiles();
+    }
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = new List<IBrowserFile>(e.GetMultipleFiles());
+        Message = $"{selectedFiles.Count} file(s) selected";
+        this.StateHasChanged();
+    }
+
+    protected async Task<FileStorage[]> FetchFiles()
+    {
+        var url = String.Format(Configuration["FileStorageApiUrl"], "files");
+        return await Http.GetFromJsonAsync<FileStorage[]>(url);
+    }
+
+    private async Task OnSubmit()
+    {
+        if (selectedFiles.Count > 0)
+        {
+            files = null;
+            using var content = new MultipartFormDataContent();
+            foreach (var file in selectedFiles)
+            {
+                var fileContent = new StreamContent(file.OpenReadStream(50000000));
+                var contentType = String.IsNullOrEmpty(file.ContentType) ? "application/octet-stream" : file.ContentType;
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+                content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
+            }
+
+            var url = String.Format(Configuration["BlobStorageApiUrl"], "upload");
+            var response = await Http.PostAsync(url, content);
+            var blobStorageResponse = await response.Content.ReadFromJsonAsync<ResponseDto>();
+
+            if (blobStorageResponse != null && blobStorageResponse.Error == false)
+            {
+                Message = "File imported successfully";
+            }
+            else
+            {
+                Message = blobStorageResponse?.Status ?? "Attention, File not imported!";
+            }
+
+            files = await FetchFiles();
+            this.StateHasChanged();
+        }
+        selectedFiles.Clear();
+    }
+
+    private string GetUrl(FileStorage file)
+    {
+        return String.Format(Configuration["BlobStorageApiUrl"], "download") + "/" + file.FileName;
+    }
 }

@@ -1,5 +1,5 @@
 
-name: Build and deploy cztask-api-test-001
+name: Build and deploy BlobStorageManager.Api to cztask-api-test-001
 
 env:
   AZURE_WEBAPP_NAME: cztask-api-test-001
@@ -25,7 +25,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build BlobStorageManager.Api/BlobStorageManager.Api.csproj --configuration Release
 
       - name: dotnet publish
         run: dotnet publish BlobStorageManager.Api/BlobStorageManager.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
